@@ -25,21 +25,21 @@ export class CytestController {
     return this.cytestService.findAll();
   }
 
-  @Get(':uuid')
-  findOne(@Param('uuid') uuid: string): Promise<Cytest> {
-    return this.cytestService.findOne(uuid);
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<Cytest> {
+    return this.cytestService.findOne(id);
   }
 
-  @Put(':uuid')
+  @Put(':id')
   update(
-    @Param('uuid') uuid: string,
+    @Param('id') id: number,
     @Body() cytestData: Partial<Cytest>,
   ): Promise<Cytest> {
-    return this.cytestService.update(uuid, cytestData);
+    return this.cytestService.update(id, cytestData);
   }
 
-  @Delete(':uuid')
-  remove(@Param('uuid') uuid: string): Promise<void> {
-    return this.cytestService.remove(uuid);
+  @Delete(':id')
+  remove(@Param('id') id: number): Promise<void> {
+    return this.cytestService.remove(id);
   }
 }

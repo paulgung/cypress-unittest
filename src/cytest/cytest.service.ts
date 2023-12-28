@@ -22,21 +22,18 @@ export class CytestService {
   }
 
   // 根据 ID 查找单个 Cytest 记录
-  async findOne(uuid: string): Promise<Cytest> {
-    return this.cytestRepository.findOne({ where: { uuid } });
+  async findOne(id: number): Promise<Cytest> {
+    return this.cytestRepository.findOne({ where: { id } });
   }
 
   // 更新 Cytest 记录
-  async update(
-    uuid: string,
-    cytestUpdateData: Partial<Cytest>,
-  ): Promise<Cytest> {
-    await this.cytestRepository.update(uuid, cytestUpdateData);
-    return this.cytestRepository.findOne({ where: { uuid } });
+  async update(id: number, cytestUpdateData: Partial<Cytest>): Promise<Cytest> {
+    await this.cytestRepository.update(id, cytestUpdateData);
+    return this.cytestRepository.findOne({ where: { id } });
   }
 
   // 删除 Cytest 记录
-  async remove(uuid: string): Promise<void> {
-    await this.cytestRepository.delete(uuid);
+  async remove(id: number): Promise<void> {
+    await this.cytestRepository.delete(id);
   }
 }
