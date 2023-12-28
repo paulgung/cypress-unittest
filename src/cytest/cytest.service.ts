@@ -56,8 +56,9 @@ export class CytestService {
   async writeCodeToFile(code: string): Promise<string> {
     // 生成 UUID 和文件夹路径
     const uuid = uuidv4();
-    const dirPath = path.join(process.cwd(), 'gsx', 'e2e', uuid);
+    const dirPath = path.join(process.cwd(), 'cypress', 'e2e', uuid);
 
+    console.log('弓少旭想看看dirPath', dirPath);
     // 确保文件夹存在
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
@@ -66,6 +67,7 @@ export class CytestService {
     // 设置文件路径为 index.cy.js
     const filePath = path.join(dirPath, 'index.cy.js');
 
+    console.log('弓少旭想看看filePath', filePath);
     // 使用文件流异步写入代码
     return new Promise((resolve, reject) => {
       const fileStream = fs.createWriteStream(filePath);
@@ -130,7 +132,6 @@ export class CytestService {
     console.log('codeBlock', codeBlock);
     if (codeBlock) {
       const filePath = await this.writeCodeToFile(codeBlock);
-      console.log('弓少旭想看看filePath', filePath);
       await this.runCypressTest(filePath);
       // await this.generateReport();
     } else {
