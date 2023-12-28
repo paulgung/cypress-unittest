@@ -9,6 +9,8 @@ import cypress from 'cypress';
 import { CYPRESS_CONFIG } from './config/index';
 import { merge } from 'mochawesome-merge';
 import generator from 'mochawesome-report-generator';
+import { exec } from 'child_process';
+
 @Injectable()
 export class CytestService {
   constructor(
@@ -54,7 +56,7 @@ export class CytestService {
   async writeCodeToFile(code: string): Promise<string> {
     // 生成 UUID 和文件夹路径
     const uuid = uuidv4();
-    const dirPath = path.join(process.cwd(), 'public', 'cache', uuid);
+    const dirPath = path.join(process.cwd(), 'gsx', 'e2e', uuid);
 
     // 确保文件夹存在
     if (!fs.existsSync(dirPath)) {
@@ -75,25 +77,32 @@ export class CytestService {
     });
   }
 
-  // 2-1、跑代码
   async runCypressTest(filePath: string): Promise<void> {
-    try {
-      const result = await cypress.run({
-        spec: filePath,
-        // 这里可以添加其他配置，如浏览器类型等
-        ...CYPRESS_CONFIG,
+    return new Promise((resolve, reject) => {
+      // 构建 Cypress 命令
+      const command = `npx cypress run --spec "${filePath}"`;
+
+      // 执行命令
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`执行错误: ${error}`);
+          reject(error);
+          return;
+        }
+        console.log(`标准输出: ${stdout}`);
+        if (stderr) {
+          console.error(`标准错误: ${stderr}`);
+        }
+        resolve();
       });
-      console.log(result);
-    } catch (error) {
-      console.error(`执行错误: ${error}`);
-    }
+    });
   }
 
   // 2-2、合并报告
   async generateReport() {
     try {
       // 确保报告目录存在
-      const reportDir = path.join(__dirname, 'cypress', 'reports', 'html');
+      const reportDir = path.join(__dirname, 'cypress', 'e2e', 'html');
       if (!fs.existsSync(reportDir)) {
         fs.mkdirSync(reportDir, { recursive: true });
       }
@@ -123,7 +132,7 @@ export class CytestService {
       const filePath = await this.writeCodeToFile(codeBlock);
       console.log('弓少旭想看看filePath', filePath);
       await this.runCypressTest(filePath);
-      await this.generateReport();
+      // await this.generateReport();
     } else {
       console.log('没有找到对应的 code_block');
     }
