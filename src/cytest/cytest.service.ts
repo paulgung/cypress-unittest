@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCytestDto } from './dto/create-cytest.dto';
-import { UpdateCytestDto } from './dto/update-cytest.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Cytest } from './entities/cytest.entity';
 
 @Injectable()
 export class CytestService {
-  create(createCytestDto: CreateCytestDto) {
-    return 'This action adds a new cytest';
+  constructor(
+    @InjectRepository(Cytest)
+    private cytestRepository: Repository<Cytest>,
+  ) {}
+
+  // 创建新的 Cytest 记录
+  async create(cytestData: Partial<Cytest>): Promise<Cytest> {
+    const newCytest = this.cytestRepository.create(cytestData);
+    return this.cytestRepository.save(newCytest);
   }
 
-  findAll() {
-    return `This action returns all cytest`;
+  // 查找所有 Cytest 记录
+  async findAll(): Promise<Cytest[]> {
+    return this.cytestRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cytest`;
+  // 根据 ID 查找单个 Cytest 记录
+  async findOne(uuid: string): Promise<Cytest> {
+    return this.cytestRepository.findOne({ where: { uuid } });
   }
 
-  update(id: number, updateCytestDto: UpdateCytestDto) {
-    return `This action updates a #${id} cytest`;
+  // 更新 Cytest 记录
+  async update(
+    uuid: string,
+    cytestUpdateData: Partial<Cytest>,
+  ): Promise<Cytest> {
+    await this.cytestRepository.update(uuid, cytestUpdateData);
+    return this.cytestRepository.findOne({ where: { uuid } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cytest`;
+  // 删除 Cytest 记录
+  async remove(uuid: string): Promise<void> {
+    await this.cytestRepository.delete(uuid);
   }
 }

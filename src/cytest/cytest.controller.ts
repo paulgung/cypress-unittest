@@ -1,34 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+// cytest.controller.ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { CytestService } from './cytest.service';
-import { CreateCytestDto } from './dto/create-cytest.dto';
-import { UpdateCytestDto } from './dto/update-cytest.dto';
+import { Cytest } from './entities/cytest.entity';
 
-@Controller('cytest')
+@Controller('cytests')
 export class CytestController {
-  constructor(private readonly cytestService: CytestService) {}
+  constructor(private cytestService: CytestService) {}
 
   @Post()
-  create(@Body() createCytestDto: CreateCytestDto) {
-    return this.cytestService.create(createCytestDto);
+  create(@Body() cytestData: Partial<Cytest>): Promise<Cytest> {
+    return this.cytestService.create(cytestData);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Cytest[]> {
     return this.cytestService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cytestService.findOne(+id);
+  @Get(':uuid')
+  findOne(@Param('uuid') uuid: string): Promise<Cytest> {
+    return this.cytestService.findOne(uuid);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCytestDto: UpdateCytestDto) {
-    return this.cytestService.update(+id, updateCytestDto);
+  @Put(':uuid')
+  update(
+    @Param('uuid') uuid: string,
+    @Body() cytestData: Partial<Cytest>,
+  ): Promise<Cytest> {
+    return this.cytestService.update(uuid, cytestData);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cytestService.remove(+id);
+  @Delete(':uuid')
+  remove(@Param('uuid') uuid: string): Promise<void> {
+    return this.cytestService.remove(uuid);
   }
 }
