@@ -5,8 +5,10 @@ import { Cytest } from './entities/cytest.entity';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as path from 'path';
-import { exec } from 'child_process';
-
+import cypress from 'cypress';
+import { CYPRESS_CONFIG } from './config/index';
+import { merge } from 'mochawesome-merge';
+import generator from 'mochawesome-report-generator';
 @Injectable()
 export class CytestService {
   constructor(
@@ -48,34 +50,80 @@ export class CytestService {
     return cytest ? cytest.code_block : null;
   }
 
-  // 写入本地文件
+  // 1、写入本地文件
   async writeCodeToFile(code: string): Promise<string> {
-    const filename = uuidv4() + '.js';
-    const filePath = path.join(__dirname, '..', 'code', filename);
-    fs.writeFileSync(filePath, code);
-    return filePath;
-  }
+    // 生成 UUID 和文件夹路径
+    const uuid = uuidv4();
+    const dirPath = path.join(process.cwd(), 'public', 'cache', uuid);
 
-  // 跑代码
-  async runCypressTest(filePath: string): Promise<void> {
-    const command = `npx cypress run --spec "${filePath}"`;
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`执行错误: ${error}`);
-        return;
-      }
-      console.log(`标准输出: ${stdout}`);
-      console.error(`标准错误: ${stderr}`);
+    // 确保文件夹存在
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    // 设置文件路径为 index.cy.js
+    const filePath = path.join(dirPath, 'index.cy.js');
+
+    // 使用文件流异步写入代码
+    return new Promise((resolve, reject) => {
+      const fileStream = fs.createWriteStream(filePath);
+      fileStream.write(code);
+      fileStream.end();
+
+      fileStream.on('finish', () => resolve(filePath));
+      fileStream.on('error', (error) => reject(error));
     });
   }
 
-  //  汇总方法
+  // 2-1、跑代码
+  async runCypressTest(filePath: string): Promise<void> {
+    try {
+      const result = await cypress.run({
+        spec: filePath,
+        // 这里可以添加其他配置，如浏览器类型等
+        ...CYPRESS_CONFIG,
+      });
+      console.log(result);
+    } catch (error) {
+      console.error(`执行错误: ${error}`);
+    }
+  }
+
+  // 2-2、合并报告
+  async generateReport() {
+    try {
+      // 确保报告目录存在
+      const reportDir = path.join(__dirname, 'cypress', 'reports', 'html');
+      if (!fs.existsSync(reportDir)) {
+        fs.mkdirSync(reportDir, { recursive: true });
+      }
+
+      // 合并报告
+      const jsonReport = await merge({
+        files: [path.join(reportDir, '*.json')],
+      });
+
+      // 生成 HTML 报告
+      const report = await generator.create(jsonReport, {
+        reportDir: reportDir,
+        // 可以在这里添加其他 mochawesome 报告生成器的配置选项
+      });
+
+      console.log('报告生成成功:', report);
+    } catch (error) {
+      console.error('报告生成失败:', error);
+    }
+  }
+
+  //  3、汇总方法
   async processCodeBlock(id: number): Promise<void> {
     const codeBlock = await this.getCodeBlockById(id);
     console.log('codeBlock', codeBlock);
     if (codeBlock) {
       const filePath = await this.writeCodeToFile(codeBlock);
+      console.log('弓少旭想看看filePath', filePath);
       await this.runCypressTest(filePath);
+      await this.generateReport();
     } else {
       console.log('没有找到对应的 code_block');
     }
