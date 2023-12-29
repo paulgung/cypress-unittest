@@ -5,12 +5,10 @@ import { Cytest } from './entities/cytest.entity';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import * as path from 'path';
-import cypress from 'cypress';
+import * as cypress from 'cypress';
 import { CYPRESS_CONFIG } from './config/index';
 import { merge } from 'mochawesome-merge';
 import generator from 'mochawesome-report-generator';
-import { exec } from 'child_process';
-
 @Injectable()
 export class CytestService {
   constructor(
@@ -58,7 +56,6 @@ export class CytestService {
     const uuid = uuidv4();
     const dirPath = path.join(process.cwd(), 'cypress', 'e2e', uuid);
 
-    console.log('弓少旭想看看dirPath', dirPath);
     // 确保文件夹存在
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
@@ -67,7 +64,6 @@ export class CytestService {
     // 设置文件路径为 index.cy.js
     const filePath = path.join(dirPath, 'index.cy.js');
 
-    console.log('弓少旭想看看filePath', filePath);
     // 使用文件流异步写入代码
     return new Promise((resolve, reject) => {
       const fileStream = fs.createWriteStream(filePath);
@@ -79,25 +75,19 @@ export class CytestService {
     });
   }
 
+  // 2-1、跑代码
   async runCypressTest(filePath: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // 构建 Cypress 命令
-      const command = `npx cypress run --spec "${filePath}"`;
-
-      // 执行命令
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`执行错误: ${error}`);
-          reject(error);
-          return;
-        }
-        console.log(`标准输出: ${stdout}`);
-        if (stderr) {
-          console.error(`标准错误: ${stderr}`);
-        }
-        resolve();
+    try {
+      console.log('弓少旭想看看filePath', filePath);
+      const result = await cypress.run({
+        spec: filePath,
+        // 这里可以添加其他配置，如浏览器类型等
+        ...CYPRESS_CONFIG,
       });
-    });
+      console.log('result:', result);
+    } catch (error) {
+      console.error(`执行错误: ${error}`);
+    }
   }
 
   // 2-2、合并报告
