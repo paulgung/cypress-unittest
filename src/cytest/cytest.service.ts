@@ -70,19 +70,32 @@ export class CytestService {
       fileStream.write(code);
       fileStream.end();
 
-      fileStream.on('finish', () => resolve(filePath));
+      fileStream.on('finish', () => resolve(dirPath));
       fileStream.on('error', (error) => reject(error));
     });
   }
 
   // 2-1、跑代码
-  async runCypressTest(filePath: string): Promise<void> {
+  async runCypressTest(dirPath: string): Promise<void> {
     try {
-      console.log('弓少旭想看看filePath', filePath);
+      const filePath = path.join(dirPath, 'index.cy.js');
+      const htmlPath = path.join(dirPath, 'html');
+      const screenshotsPath = path.join(dirPath, 'screenshots');
+      const videosPath = path.join(dirPath, 'videos');
+
       const result = await cypress.run({
         spec: filePath,
         // 这里可以添加其他配置，如浏览器类型等
         ...CYPRESS_CONFIG,
+        reporterOptions: {
+          ...CYPRESS_CONFIG.reporterOptions,
+          reportDir: htmlPath,
+        },
+        config: {
+          video: true,
+          videosFolder: videosPath,
+          screenshotsFolder: screenshotsPath,
+        },
       });
       console.log('result:', result);
     } catch (error) {
@@ -121,8 +134,8 @@ export class CytestService {
     const codeBlock = await this.getCodeBlockById(id);
     console.log('codeBlock', codeBlock);
     if (codeBlock) {
-      const filePath = await this.writeCodeToFile(codeBlock);
-      await this.runCypressTest(filePath);
+      const dirPath = await this.writeCodeToFile(codeBlock);
+      await this.runCypressTest(dirPath);
       // await this.generateReport();
     } else {
       console.log('没有找到对应的 code_block');
