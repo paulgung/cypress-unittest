@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { CytestModule } from './cytest/cytest.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cytest } from './cytest/entities/cytest.entity';
+import { AiSourceMapModule } from './ai-source-map/ai-source-map.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Cytest } from './cytest/entities/cytest.entity';
       synchronize: true,
     }),
     CytestModule,
+    AiSourceMapModule,
   ],
   controllers: [AppController],
   providers: [AppService],
