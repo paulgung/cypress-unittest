@@ -46,17 +46,8 @@ export class AiSourceMapController {
     return this.aiSourceMapService.remove(+id);
   }
 
-  @Get('stream')
-  streamEvents(@Req() req: Request, @Res() res: Response): void {
-    const handler = (data: string) => {
-      res.write(`data: ${data}\n\n`);
-    };
-
-    this.aiSourceMapService.onMessage(handler);
-
-    req.on('close', () => {
-      this.aiSourceMapService.removeHandler(handler);
-      res.end();
-    });
+  @Post('/ai_sourcemap')
+  async aiSourcemap(@Body() aiSourceMap) {
+    return await this.aiSourceMapService.aiSourcemapParse(aiSourceMap);
   }
 }

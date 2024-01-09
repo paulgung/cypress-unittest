@@ -1545,6 +1545,15 @@ aws4@^1.8.0:
   resolved "https://miniapp.10jqka.com.cn/npmserver/aws4/-/aws4-1.12.0.tgz"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
+axios@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.npmmirror.com/axios/-/axios-1.6.5.tgz#2c090da14aeeab3770ad30c3a1461bc970fb0cd8"
+  integrity sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==
+  dependencies:
+    follow-redirects "^1.15.4"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 babel-jest@^29.7.0:
   version "29.7.0"
   resolved "https://miniapp.10jqka.com.cn/npmserver/babel-jest/-/babel-jest-29.7.0.tgz"
@@ -2794,6 +2803,11 @@ flatted@^3.2.9:
   version "3.2.9"
   resolved "https://miniapp.10jqka.com.cn/npmserver/flatted/-/flatted-3.2.9.tgz"
   integrity sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==
+
+follow-redirects@^1.15.4:
+  version "1.15.4"
+  resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
+  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
 
 forever-agent@~0.6.1:
   version "0.6.1"
@@ -4649,6 +4663,11 @@ proxy-from-env@1.0.0:
   resolved "https://miniapp.10jqka.com.cn/npmserver/proxy-from-env/-/proxy-from-env-1.0.0.tgz"
   integrity sha512-F2JHgJQ1iqwnHDcQjVBsq3n/uoaFL+iPW/eAeL7kVxy/2RrWaN4WroKjjvbsoRtv0ftelNyC01bjRhn/bhcf4A==
 
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
 psl@^1.1.33:
   version "1.9.0"
   resolved "https://miniapp.10jqka.com.cn/npmserver/psl/-/psl-1.9.0.tgz"
@@ -5094,7 +5113,7 @@ source-map-support@0.5.21, source-map-support@^0.5.20, source-map-support@~0.5.2
 
 source-map@0.7.4, source-map@^0.7.4:
   version "0.7.4"
-  resolved "https://miniapp.10jqka.com.cn/npmserver/source-map/-/source-map-0.7.4.tgz"
+  resolved "https://registry.npmmirror.com/source-map/-/source-map-0.7.4.tgz#a9bbe705c9d8846f4e08ff6765acf0f1b0898656"
   integrity sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==
 
 source-map@^0.6.0, source-map@^0.6.1:
