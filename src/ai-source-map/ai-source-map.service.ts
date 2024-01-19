@@ -67,16 +67,36 @@ export class AiSourceMapService {
       `${codes}\n` +
       `报错代码行数：${originalPosition.line},\n` +
       `报错代码列数：${originalPosition.column}`;
-
-    return await axios.post(
-      'https://frontend.myhexin.com/kingfisher/robot/homeworkChat',
-      {
-        content: prompts,
-        source: 'homework-47-wangxiaolong',
-        token: '610EE45BF-Qtc2VydmU=',
-        temperature: 1,
+    // GPT URL
+    const gptURL = 'https://frontend.myhexin.com/kingfisher/robot/homeworkChat';
+    // 参数
+    const params = {
+      content: prompts,
+      source: 'homework-47-wangxiaolong',
+      token: '610EE45BF-Qtc2VydmU=',
+      temperature: 1,
+    };
+    // 临时方案
+    const response = await fetch(gptURL, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+    });
+
+    const res = await response.json();
+    console.log(res);
+    // const res = await axios.post(
+    //   'https://frontend.myhexin.com/kingfisher/robot/homeworkChat',
+    //   {
+    //     content: prompts,
+    //     source: 'homework-47-wangxiaolong',
+    //     token: '610EE45BF-Qtc2VydmU=',
+    //     temperature: 1,
+    //   },
+    // );
+    // return res.data.data;
   }
 
   async aiErrorStackParse() {
@@ -95,7 +115,7 @@ export class AiSourceMapService {
       `请你扮演一名前端工程师,现在有一个紧急线上bug,我给你提供错误栈,请你帮我分析bug原因,以下是错误栈:\n` +
       `${error_stack}\n`;
 
-    return await axios.post(
+    const res = await axios.post(
       'https://frontend.myhexin.com/kingfisher/robot/homeworkChat',
       {
         content: prompts,
@@ -104,5 +124,6 @@ export class AiSourceMapService {
         temperature: 1,
       },
     );
+    return res.data.data;
   }
 }

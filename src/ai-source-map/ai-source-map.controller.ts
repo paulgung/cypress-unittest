@@ -50,4 +50,10 @@ export class AiSourceMapController {
   async aiSourcemap(@Body() aiSourceMap) {
     return await this.aiSourceMapService.aiSourcemapParse(aiSourceMap);
   }
+
+  @Post('/ai_errorstack')
+  async aiErrorStack(@Body() aiSourceMap) {
+    console.log(123);
+    return await this.aiSourceMapService.aiErrorStackParse();
+  }
 }
