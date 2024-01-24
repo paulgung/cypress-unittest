@@ -5,6 +5,7 @@ import { CytestModule } from './cytest/cytest.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cytest } from './cytest/entities/cytest.entity';
 import { AiSourceMapModule } from './ai-source-map/ai-source-map.module';
+import { ChatGptModule } from './chat-gpt/chat-gpt.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AiSourceMapModule } from './ai-source-map/ai-source-map.module';
     }),
     CytestModule,
     AiSourceMapModule,
+    ChatGptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
