@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatGptDto } from './dto/create-chat-gpt.dto';
 import { UpdateChatGptDto } from './dto/update-chat-gpt.dto';
-import FormData from 'form-data';
+// import FormData from 'form-data';
+const FormData = require('form-data');
+
 
 @Injectable()
 export class ChatGptService {
@@ -12,7 +14,8 @@ export class ChatGptService {
   findAll() {
     const form = new FormData();
 
-    form.append('')
+    form.append('gsx', 'gsx');
+    console.log('弓少旭想看看form', form);
     return `This action returns all chatGpt`;
   }
 

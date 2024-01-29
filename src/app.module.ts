@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CytestModule } from './cytest/cytest.module';
@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cytest } from './cytest/entities/cytest.entity';
 import { AiSourceMapModule } from './ai-source-map/ai-source-map.module';
 import { ChatGptModule } from './chat-gpt/chat-gpt.module';
+import { json, urlencoded } from 'express';
+import { ChatGptController } from './chat-gpt/chat-gpt.controller';
 
 @Module({
   imports: [
@@ -26,4 +28,10 @@ import { ChatGptModule } from './chat-gpt/chat-gpt.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(json(), urlencoded({ extended: true }))
+      .forRoutes(ChatGptController);
+  }
+}
