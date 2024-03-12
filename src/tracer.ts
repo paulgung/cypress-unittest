@@ -25,11 +25,12 @@ const exporterOptions = {
 const traceExporter = new OTLPTraceExporter(exporterOptions); // grpc
 
 const consoleSpanExporter = new ConsoleSpanExporter();
-// const spanProcessor = new SimpleSpanProcessor(consoleSpanExporter);
+const spanProcessor = new SimpleSpanProcessor(consoleSpanExporter);
 
-const spanProcessor = new SimpleSpanProcessor(traceExporter);
+// const spanProcessor = new SimpleSpanProcessor(traceExporter);
 
 const sdk = new NodeSDK({
+  spanProcessor,
   traceExporter,
   instrumentations: [
     // getNodeAutoInstrumentations(),
