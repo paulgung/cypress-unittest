@@ -30,7 +30,7 @@ const spanProcessor = new SimpleSpanProcessor(consoleSpanExporter);
 // const spanProcessor = new SimpleSpanProcessor(traceExporter);
 
 const sdk = new NodeSDK({
-  spanProcessor,
+  // spanProcessor,
   traceExporter,
   instrumentations: [
     // getNodeAutoInstrumentations(),

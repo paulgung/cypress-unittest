@@ -8,6 +8,7 @@ import { AiSourceMapModule } from './ai-source-map/ai-source-map.module';
 import { ChatGptModule } from './chat-gpt/chat-gpt.module';
 import { json, urlencoded } from 'express';
 import { ChatGptController } from './chat-gpt/chat-gpt.controller';
+import { AielkModule } from './aielk/aielk.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ChatGptController } from './chat-gpt/chat-gpt.controller';
     CytestModule,
     AiSourceMapModule,
     ChatGptModule,
+    AielkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
