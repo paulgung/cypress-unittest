@@ -12,7 +12,7 @@ const OneDayMilliSeconds = 24 * 60 * 60 * 1000; // 一天的毫秒数
 @Injectable()
 export class AiElkService {
   // 获取ELK日志
-  async getElkLog(createAielkDto: CreateAiElkDto) {
+  async getElkLog(createAielkDto: CreateAiElkDto, indexName: string) {
     const { service, from, to } = createAielkDto;
     if (!service || !from || !to)
       throw new HttpException(
@@ -62,7 +62,7 @@ export class AiElkService {
   }
 
   // ELK排障主方法
-  async alertWithUrl(alertInfo: GoToAiElkDto) {
+  async alertWithUrl(alertInfo: GoToAiElkDto, indexName: string) {
     const { tags, timestamp, status, grade } = alertInfo;
     const { app } = tags;
     // 校验程序名
