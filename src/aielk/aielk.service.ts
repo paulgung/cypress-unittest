@@ -85,7 +85,7 @@ export class AiElkService {
     // 获取前一天的时间戳
     const from = to - OneDayMilliSeconds;
 
-    const URL = `https://paas.myhexin.com/inspection/aielk?service=${serviceName}&from=${from}&to=${to}`;
+    const URL = `https://paas.myhexin.com/inspection/aielk?index=${indexName}&service=${serviceName}&from=${from}&to=${to}`;
     let noticeMessage = '【项目告警提醒】\n';
     noticeMessage += `项目名: ${serviceName}\n`;
     noticeMessage += `告警时间: ${formattedDate}\n`;

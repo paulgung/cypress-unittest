@@ -26,7 +26,7 @@ export class AiElkController {
   alertRecall(
     @Body() goToAiElkDto: GoToAiElkDto,
     @Param('index_name') indexName: string,
-    @Param('serivce_name') serviceName: string,
+    @Param('service_name') serviceName: string,
   ) {
     const params = { indexName, serviceName };
     return this.aiElkService.alertWithUrl(goToAiElkDto, params);
