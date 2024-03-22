@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAielkDto } from './dto/create-aielk.dto';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  CreateAiElkDto,
+  GoToAiElkDto,
+  AlarmStatus,
+  AlarmGrade,
+} from './dto/create-aielk.dto';
 import fetch from 'node-fetch';
 
+const OneDayMilliSeconds = 24 * 60 * 60 * 1000; // 一天的毫秒数
+
 @Injectable()
-export class AielkService {
-  async getElkLog(createAielkDto: CreateAielkDto) {
-    console.log(createAielkDto);
+export class AiElkService {
+  // 获取ELK日志
+  async getElkLog(createAielkDto: CreateAiElkDto) {
     const { service, from, to } = createAielkDto;
-    if (!service || !from || !to) return '不存在elk日志信息';
+    if (!service || !from || !to)
+      throw new HttpException(
+        '不存在elk日志信息, 请检查参数',
+        HttpStatus.BAD_REQUEST,
+      );
+
     const response = await fetch(
       'https://apm.myhexin.com/elk/mobile-archive-am-skywalking-log-json-*/_search',
       {
@@ -40,9 +52,35 @@ export class AielkService {
     );
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new HttpException(
+        `Request failed with status ${response.status}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     return response.json();
+  }
+
+  // ELK排障主方法
+  async alertWithUrl(alertInfo: GoToAiElkDto) {
+    const { tags, timestamp, status, grade } = alertInfo;
+    const { app } = tags;
+    // 校验程序名
+    if (!app) return '请输入程序名!';
+
+    // 获取当前时间戳（单位：毫秒）
+    const to = new Date().getTime();
+    // 获取前一天的时间戳
+    const from = to - OneDayMilliSeconds;
+
+    const URL = `https://paas.myhexin.com/inspection/aielk?service=${app}&from=${from}&to=${to}`;
+    let noticeMessage = '【项目告警提醒】\n';
+    noticeMessage += `项目名: ${app}\n`;
+    noticeMessage += `告警时间: ${timestamp}\n`;
+    noticeMessage += `告警状态: ${AlarmStatus[status]}\n`;
+    noticeMessage += `告警等级: ${AlarmGrade[grade]}\n`;
+    noticeMessage += `前往ELK日志排障: ${URL}\n`;
+
+    return noticeMessage;
   }
 }

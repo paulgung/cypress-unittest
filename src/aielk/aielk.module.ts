@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AielkService } from './aielk.service';
-import { AielkController } from './aielk.controller';
+import { AiElkService } from './aielk.service';
+import { AiElkController } from './aielk.controller';
 
 @Module({
-  controllers: [AielkController],
-  providers: [AielkService]
+  controllers: [AiElkController],
+  providers: [AiElkService],
 })
 export class AielkModule {}
