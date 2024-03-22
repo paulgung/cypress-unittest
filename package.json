@@ -33,6 +33,7 @@
     "@opentelemetry/sdk-trace-base": "^1.22.0",
     "axios": "^1.6.5",
     "cypress": "^13.6.2",
+    "dayjs": "^1.11.10",
     "form-data": "^4.0.0",
     "mysql": "^2.18.1",
     "node-fetch": "2.6.1",

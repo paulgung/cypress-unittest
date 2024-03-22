@@ -6,6 +6,7 @@ import {
   AlarmGrade,
 } from './dto/create-aielk.dto';
 import fetch from 'node-fetch';
+import * as dayjs from 'dayjs';
 
 const OneDayMilliSeconds = 24 * 60 * 60 * 1000; // 一天的毫秒数
 
@@ -68,6 +69,9 @@ export class AiElkService {
     // 校验程序名
     if (!app) return '请输入程序名!';
 
+    // 使用 Day.js 将时间戳字符串解析为日期对象，然后进行格式化
+    const formattedDate = dayjs.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+
     // 获取当前时间戳（单位：毫秒）
     const to = new Date().getTime();
     // 获取前一天的时间戳
@@ -76,9 +80,10 @@ export class AiElkService {
     const URL = `https://paas.myhexin.com/inspection/aielk?service=${app}&from=${from}&to=${to}`;
     let noticeMessage = '【项目告警提醒】\n';
     noticeMessage += `项目名: ${app}\n`;
-    noticeMessage += `告警时间: ${timestamp}\n`;
+    noticeMessage += `告警时间: ${formattedDate}\n`;
     noticeMessage += `告警状态: ${AlarmStatus[status]}\n`;
     noticeMessage += `告警等级: ${AlarmGrade[grade]}\n`;
+    noticeMessage += `Elastic索引: ${indexName}\n`;
     noticeMessage += `前往ELK日志排障: ${URL}\n`;
 
     return noticeMessage;
