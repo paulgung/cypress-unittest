@@ -21,7 +21,7 @@ export class AiElkService {
       );
 
     const response = await fetch(
-      'https://apm.myhexin.com/elk/mobile-archive-am-skywalking-log-json-*/_search',
+      `https://apm.myhexin.com/elk/${indexName}/_search`,
       {
         method: 'POST',
         headers: {
