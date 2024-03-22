@@ -15,9 +15,9 @@ export class AiElkService {
   // 获取ELK日志
   async getElkLog(
     createAielkDto: CreateAiElkDto,
-    params: { serviceName: string; indexName: string },
+    params: { indexName: string },
   ) {
-    const { serviceName, indexName } = params;
+    const { indexName } = params;
     const { service, from, to } = createAielkDto;
 
     if (!service || !from || !to)
@@ -39,7 +39,7 @@ export class AiElkService {
               must: [
                 {
                   term: {
-                    service: serviceName,
+                    service,
                   },
                 },
                 {

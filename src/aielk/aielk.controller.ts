@@ -13,13 +13,12 @@ import { CreateAiElkDto, GoToAiElkDto } from './dto/create-aielk.dto';
 @Controller('aielk')
 export class AiElkController {
   constructor(private readonly aiElkService: AiElkService) {}
-  @Post('v1/get_elk/:index_name/:service_name')
+  @Post('v1/get_elk/:index_name?')
   getElkLog(
     @Body() createAielkDto: CreateAiElkDto,
-    @Param('index_name') indexName: string,
-    @Param('serivce_name') serviceName: string,
+    @Param('index_name') indexName = 'mobile-archive-am-skywalking-log-json-*',
   ) {
-    const params = { indexName, serviceName };
+    const params = { indexName };
     return this.aiElkService.getElkLog(createAielkDto, params);
   }
 
