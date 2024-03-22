@@ -13,8 +13,13 @@ const OneDayMilliSeconds = 24 * 60 * 60 * 1000; // 一天的毫秒数
 @Injectable()
 export class AiElkService {
   // 获取ELK日志
-  async getElkLog(createAielkDto: CreateAiElkDto, indexName: string) {
+  async getElkLog(
+    createAielkDto: CreateAiElkDto,
+    params: { serviceName: string; indexName: string },
+  ) {
+    const { serviceName, indexName } = params;
     const { service, from, to } = createAielkDto;
+
     if (!service || !from || !to)
       throw new HttpException(
         '不存在elk日志信息, 请检查参数',
@@ -34,7 +39,7 @@ export class AiElkService {
               must: [
                 {
                   term: {
-                    service,
+                    service: serviceName,
                   },
                 },
                 {
@@ -63,11 +68,14 @@ export class AiElkService {
   }
 
   // ELK排障主方法
-  async alertWithUrl(alertInfo: GoToAiElkDto, indexName: string) {
-    const { tags, timestamp, status, grade } = alertInfo;
-    const { app } = tags;
+  async alertWithUrl(
+    alertInfo: GoToAiElkDto,
+    params: { serviceName: string; indexName: string },
+  ) {
+    const { serviceName, indexName } = params;
+    const { timestamp, status, grade } = alertInfo;
     // 校验程序名
-    if (!app) return '请输入程序名!';
+    if (!serviceName) return '请输入程序名!';
 
     // 使用 Day.js 将时间戳字符串解析为日期对象，然后进行格式化
     const formattedDate = dayjs.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
@@ -77,9 +85,9 @@ export class AiElkService {
     // 获取前一天的时间戳
     const from = to - OneDayMilliSeconds;
 
-    const URL = `https://paas.myhexin.com/inspection/aielk?service=${app}&from=${from}&to=${to}`;
+    const URL = `https://paas.myhexin.com/inspection/aielk?service=${serviceName}&from=${from}&to=${to}`;
     let noticeMessage = '【项目告警提醒】\n';
-    noticeMessage += `项目名: ${app}\n`;
+    noticeMessage += `项目名: ${serviceName}\n`;
     noticeMessage += `告警时间: ${formattedDate}\n`;
     noticeMessage += `告警状态: ${AlarmStatus[status]}\n`;
     noticeMessage += `告警等级: ${AlarmGrade[grade]}\n`;
